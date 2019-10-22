@@ -149,7 +149,7 @@ public class ObstacleCourse extends LinearOpMode {
             newRightTarget = robot.rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             robot.leftFrontDrive.setTargetPosition(newLeftTarget);
             robot.leftRearDrive.setTargetPosition(newLeftTarget);
-            robot.rightFrontDrive.setTargetPosition(newRightTarget);git
+            robot.rightFrontDrive.setTargetPosition(newRightTarget);
             robot.rightRearDrive.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
