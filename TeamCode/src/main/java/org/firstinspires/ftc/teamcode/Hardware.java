@@ -59,6 +59,9 @@ public class Hardware
     public DcMotor  leftRearDrive = null;
     public DcMotor  rightRearDrive = null;
 
+    public Servo rightArm=null;
+    public Servo leftArm=null;
+    public Servo clampIntake=null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -98,6 +101,11 @@ public class Hardware
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        leftArm=hwMap.get(Servo.class,"left_arm");
+        rightArm=hwMap.get(Servo.class,"right_arm");
+        clampIntake=hwMap.get(Servo.class,"clamp_intake");
+
     }
  }
 

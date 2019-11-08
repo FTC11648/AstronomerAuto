@@ -82,6 +82,10 @@
          rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
          rightRearDrive.setDirection(DcMotor.Direction.REVERSE);
 
+         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         rightRearDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         rightRearDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
          // Wait for the game to start (driver presses PLAY)
          waitForStart();
          runtime.reset();
@@ -108,6 +112,8 @@
              leftFrontPower = Range.clip(frontPower+turnPower-translatePower, -1, 1);
              rightRearPower = Range.clip(frontPower-turnPower-translatePower, -1, 1);
              rightFrontPower = Range.clip(frontPower-turnPower+translatePower,-1, 1);
+
+
 
              // Choose to drive using either Tank Mode, or POV Mode
              // Comment out the method that's not used.  The default below is POV.
@@ -139,6 +145,8 @@
              telemetry.addData("Turn", "%.2f", turnPower);
              telemetry.addData("Front", "%.2f", frontPower);
              telemetry.addData("Translate", "%.2f", translatePower);
+             telemetry.addData("Right Front", "Running at %7d", rightFrontDrive.getCurrentPosition());
+             telemetry.addData("right Rear", "Running at %7d", rightRearDrive.getCurrentPosition());
              telemetry.update();
          }
      }

@@ -75,9 +75,9 @@ public class ObstacleCourse extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.5;
-    static final double     TURN_SPEED              = 0.5;
+                                                      (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795);
+    static final double     DRIVE_SPEED             = 0.35;
+    static final double     TURN_SPEED              = 0.35;
 
     @Override
     public void runOpMode() {
@@ -117,10 +117,27 @@ public class ObstacleCourse extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 20.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   51.8362787842*2, -51.8362787842*2, 6.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -48, -48
-                , 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED,  48,  48, 20.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(TURN_SPEED,   51.8362787842*2, -51.8362787842*2, 6.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -48, -48, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED, 58, 58, 4 ); //forward 4 feet
+        encoderDrive(TURN_SPEED, 51.8362787842/2, -51.8362787842/2, 4 ); //right 90
+        encoderDrive(DRIVE_SPEED, 20, 20, 4 ); // forward 2 feet
+        encoderDrive(DRIVE_SPEED, -51.8362787842/2, 51.8362787842/2, 4 ); //left 90
+        encoderDrive(DRIVE_SPEED, 22, 22, 4 );// forward 3 feet
+        encoderDrive(DRIVE_SPEED,-50.8362787842/2 , 50.8362787842/2, 4 ); // left 90
+        encoderDrive(DRIVE_SPEED, 20, 20, 4 ); // forward 2
+        encoderDrive(DRIVE_SPEED, 51.8362787842/2, -51.8362787842/2, 4 );// right 90
+        encoderDrive(DRIVE_SPEED, 48, 48, 4 );// forward 4
+        encoderDrive(DRIVE_SPEED, 51.8362787842/2, -51.8362787842/2, 4 );//right 90
+        encoderDrive(DRIVE_SPEED, 60, 60, 4 );//forward 5
+        encoderDrive(DRIVE_SPEED, 51.8362787842/2, -51.8362787842/2, 4 );//right 90
+        encoderDrive(DRIVE_SPEED, 24, 24, 4 );// forward 2
+        encoderDrive(DRIVE_SPEED, 51.8362787842/2, -51.8362787842/2, 4 );// right 90
+        encoderDrive(DRIVE_SPEED, 12, 12, 4 );// forward 1
+        encoderDrive(DRIVE_SPEED, -51.8362787842/2 , 51.8362787842/2, 4 );//left 90
+        encoderDrive(DRIVE_SPEED, 72, 72, 4 );//forward 6
+
 
         //sleep(1000);     // pause for servos to move
 
@@ -191,7 +208,7 @@ public class ObstacleCourse extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy())) {
+                   (robot.leftFrontDrive.isBusy() || robot.rightFrontDrive.isBusy())) {
                 // Display it for the driver.
                 telemetry.addData("leftFrontTarget",  "Running to %7d", robot.leftFrontDrive.getTargetPosition());
                 telemetry.addData("rightFrontTarget",  "Running to %7d", robot.rightFrontDrive.getTargetPosition());
@@ -199,6 +216,7 @@ public class ObstacleCourse extends LinearOpMode {
                 telemetry.addData("rightRearTarget",  "Running to %7d", robot.rightRearDrive.getTargetPosition());
 
                 telemetry.addData("Encoder", "Running at %7d", robot.leftFrontDrive.getCurrentPosition());
+
                 /*telemetry.addData("leftFrontPower", "is %7f", robot.leftFrontDrive.getPower());
                 telemetry.addData("leftRearPower", "is %7f", robot.leftRearDrive.getPower());
                 telemetry.addData("rightFrontPower", "is %7f", robot.rightFrontDrive.getPower());*/
