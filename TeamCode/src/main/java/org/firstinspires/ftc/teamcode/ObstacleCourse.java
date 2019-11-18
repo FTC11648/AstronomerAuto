@@ -214,9 +214,9 @@ public class ObstacleCourse extends LinearOpMode {
                 telemetry.addData("rightFrontTarget",  "Running to %7d", robot.rightFrontDrive.getTargetPosition());
                 telemetry.addData("leftRearTarget",  "Running to %7d", robot.leftRearDrive.getTargetPosition());
                 telemetry.addData("rightRearTarget",  "Running to %7d", robot.rightRearDrive.getTargetPosition());
-
+//hi
                 telemetry.addData("Encoder", "Running at %7d", robot.leftFrontDrive.getCurrentPosition());
-
+                telemetry.addData("Hi", " Test");
                 /*telemetry.addData("leftFrontPower", "is %7f", robot.leftFrontDrive.getPower());
                 telemetry.addData("leftRearPower", "is %7f", robot.leftRearDrive.getPower());
                 telemetry.addData("rightFrontPower", "is %7f", robot.rightFrontDrive.getPower());*/
