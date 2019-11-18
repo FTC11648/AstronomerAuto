@@ -51,7 +51,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @TeleOp(name="Pushbot: Teleop POV", group="Pushbot")
-//@Disabled
+@Disabled
 public class FourBar extends LinearOpMode {
 
     /* Declare OpMode members. */

@@ -34,6 +34,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+
+
 
 /**
  * This is NOT an opmode.
@@ -58,10 +61,7 @@ public class Hardware
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  leftRearDrive = null;
     public DcMotor  rightRearDrive = null;
-
-    public Servo rightArm=null;
-    public Servo leftArm=null;
-    public Servo clampIntake=null;
+    public BNO055IMU imu = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -83,6 +83,8 @@ public class Hardware
         leftRearDrive  = hwMap.get(DcMotor.class, "leftRearDrive");
         rightRearDrive = hwMap.get(DcMotor.class, "rightRearDrive");
 
+        imu = hwMap.get(BNO055IMU.class, "imu");
+
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         leftRearDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -102,9 +104,9 @@ public class Hardware
         leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftArm=hwMap.get(Servo.class,"left_arm");
+        /*leftArm=hwMap.get(Servo.class,"left_arm");
         rightArm=hwMap.get(Servo.class,"right_arm");
-        clampIntake=hwMap.get(Servo.class,"clamp_intake");
+        clampIntake=hwMap.get(Servo.class,"clamp_intake");*/
 
     }
  }
