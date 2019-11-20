@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
 public class Gyros extends LinearOpMode{
     Hardware robot = new Hardware();
-    Orientation lastAngles = new Orientation();
-    double globalAngle, power = .30, correction;
-    double leftPower, rightPower;
+    public Orientation lastAngles = new Orientation();
+    public double globalAngle;
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -28,15 +28,7 @@ public class Gyros extends LinearOpMode{
         robot.leftRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //Configure imu
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
-
-        robot.imu.initialize(parameters);
 
         // make sure the imu gyro is calibrated before continuing.
         while (!isStopRequested() && !robot.imu.isGyroCalibrated())
@@ -47,23 +39,20 @@ public class Gyros extends LinearOpMode{
 
         waitForStart();
 
-        rotate(360, 0.75);
+        rotate(90);
+        rotate(-90);
 
-        while(true) {telemetry.addData("Angle: ", "%7f", getAngle()); telemetry.update(); }
+        telemetry.addData("Turned: ", "%7f", getAngle()); telemetry.update();
+        sleep(2000);
     }
 
     private void resetAngle() {
         lastAngles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        globalAngle =0;
+        globalAngle = 0;
 
     }
 
     private double getAngle() {
-        // We experimentally determined the Z axis is the axis we want to use for heading angle.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
-        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
-        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
-
         Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
@@ -80,26 +69,28 @@ public class Gyros extends LinearOpMode{
         return globalAngle;
     }
 
-    public void rotate(int degrees, double power) {
+    public void rotate(int degrees) {
         double  leftPower, rightPower;
 
         // restart imu movement tracking.
         resetAngle();
 
-        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
-        // clockwise (right).
+        double k = 0.025;
 
-        if (degrees < 0)
-        {   // turn right.
-            leftPower = power;
-            rightPower = -power;
-        }
-        else if (degrees > 0)
-        {   // turn left.
-            leftPower = -power;
-            rightPower = power;
-        }
-        else return;
+        double error = (degrees - getAngle())*k;
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        //if (degrees < 0) {
+           // turn right.
+        leftPower = -error;
+        rightPower = error;
+        //}
+       // else if (degrees > 0) {
+            // turn left.
+        //leftPower = -power;
+        //rightPower = power;
+        //}
+        //else return;
 
         // set power to rotate.
         robot.leftFrontDrive.setPower(leftPower);
@@ -107,22 +98,41 @@ public class Gyros extends LinearOpMode{
         robot.rightFrontDrive.setPower(rightPower);
         robot.rightRearDrive.setPower(rightPower);
 
+
+
         // rotate until turn is completed.
-        if (degrees < 0)
-        {
+        /*if (degrees < 0) {
             // On right turn we have to get off zero first.
             while (opModeIsActive() && getAngle() == 0) {}
 
-            while (opModeIsActive() && getAngle() >= degrees) {}
+            while (opModeIsActive() && getAngle() > degrees) {}
+        }*/
+
+        // left turn.
+
+        runtime.reset();
+        while (opModeIsActive() && Math.abs(getAngle()-degrees) <= 1.5) {
+            error = (degrees - getAngle())*k;
+
+            leftPower = -error;
+            rightPower = error;
+
+            robot.leftFrontDrive.setPower(leftPower);
+            robot.leftRearDrive.setPower(leftPower);
+            robot.rightFrontDrive.setPower(rightPower);
+            robot.rightRearDrive.setPower(rightPower);
+
+            telemetry.addData("Angle: ", "%7f", getAngle());
+            telemetry.addData("Power: ", "%7f", error);
+            telemetry.update();
         }
-        else    // left turn.
-            while (opModeIsActive() && getAngle() <= degrees) {}
 
         // turn the motors off.
         robot.leftFrontDrive.setPower(0);
         robot.leftRearDrive.setPower(0);
         robot.rightFrontDrive.setPower(0);
         robot.rightRearDrive.setPower(0);
+        telemetry.addData("Angle: ", "%7f", getAngle()); telemetry.update();
 
         // wait for rotation to stop.
         sleep(1000);
