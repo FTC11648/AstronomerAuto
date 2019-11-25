@@ -69,7 +69,7 @@ public class Gyros extends LinearOpMode{
         return globalAngle;
     }
 
-    public void rotate(int degrees) {
+    public void rotate(double degrees) {
         double  leftPower, rightPower;
 
         // restart imu movement tracking.
